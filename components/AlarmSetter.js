@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
@@ -99,13 +99,19 @@ export default function AlarmSetter({ onSoundPick, soundName }) {
       {soundName && <Text style={styles.soundNameText}>صدای فعلی: {soundName}</Text>}
 
       {show && (
-        <DateTimePicker
-          value={new Date(new Date().getTime() + 60000)}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
+        Platform.OS === 'web' ? (
+          <Text style={styles.platformNotice}>
+            تنظیم زمان در نسخه وب پشتیبانی نمی‌شود. لطفا از اپلیکیشن موبایل استفاده کنید.
+          </Text>
+        ) : (
+          <DateTimePicker
+            value={new Date(new Date().getTime() + 60000)}
+            mode="time"
+            is24Hour={true}
+            display={'default'}
+            onChange={onChange}
+          />
+        )
       )}
     </View>
   );
@@ -118,6 +124,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#1c1c1e',
         padding: 20,
+    },
+    platformNotice: {
+        color: '#ffcc00',
+        textAlign: 'center',
+        marginVertical: 20,
+        fontSize: 16,
+        fontStyle: 'italic',
     },
     header: {
         fontSize: 28,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { generateMathProblem } from '../utils/mathGenerator';
 
 export default function MathChallenge({ onCorrect }) {
@@ -36,47 +36,54 @@ export default function MathChallenge({ onCorrect }) {
         placeholderTextColor="#666"
         autoFocus={true}
       />
-      <View style={styles.buttonContainer}>
-        <Button title="ثبت" onPress={check} color={Platform.OS === 'ios' ? '#fff' : '#3498db'} />
-      </View>
+      <TouchableOpacity style={styles.button} onPress={check}>
+        <Text style={styles.buttonText}>ثبت</Text>
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 30, 
-    backgroundColor: '#1c1c1e' 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+    backgroundColor: '#1c1c1e'
   },
-  title: { 
-    fontSize: 22, 
-    marginBottom: 20, 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+    fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
   },
-  math: { 
-    fontSize: 48, 
-    marginVertical: 20, 
-    fontWeight: 'bold', 
-    color: '#f39c12' 
+  math: {
+    fontSize: 48,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    color: '#f39c12'
   },
-  input: { 
-    borderBottomWidth: 2, 
+  input: {
+    borderBottomWidth: 2,
     borderColor: '#3498db',
-    width: 120, 
-    textAlign: 'center', 
+    width: 120,
+    textAlign: 'center',
     fontSize: 36,
     marginBottom: 30,
     paddingVertical: 10,
     color: '#fff',
   },
-  buttonContainer: {
+  button: {
     backgroundColor: '#3498db',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
     borderRadius: 10,
-    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   }
 });
