@@ -1,6 +1,10 @@
 {
   "cli": {
+<<<<<<< HEAD
     "version": ">= 16.20.2",
+=======
+    "version": ">= 16.20.1",
+>>>>>>> wip/local-changes
     "appVersionSource": "remote"
   },
   "build": {

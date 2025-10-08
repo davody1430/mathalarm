@@ -23,31 +23,37 @@ export default function App() {
   const [sound, setSound] = useState(null);
   const [alarmSoundUri, setAlarmSoundUri] = useState(null);
   const [alarmSoundName, setAlarmSoundName] = useState('Default');
-  
+
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
     // Load custom sound from storage
     const loadSound = async () => {
-      const uri = await AsyncStorage.getItem(SOUND_URI_KEY);
-      const name = await AsyncStorage.getItem(SOUND_NAME_KEY);
-      if (uri) setAlarmSoundUri(uri);
-      if (name) setAlarmSoundName(name);
+      try {
+        const uri = await AsyncStorage.getItem(SOUND_URI_KEY);
+        const name = await AsyncStorage.getItem(SOUND_NAME_KEY);
+        if (uri) setAlarmSoundUri(uri);
+        if (name) setAlarmSoundName(name);
+      } catch (e) {
+        console.warn('Error loading sound from storage', e);
+      }
     };
     loadSound();
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(() => {
       onTrigger();
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(() => {
       onTrigger();
     });
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
+      try {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      } catch (e) {}
       if (sound) {
         sound.unloadAsync();
       }
@@ -57,29 +63,41 @@ export default function App() {
   const handleSoundPick = async (uri, name) => {
     setAlarmSoundUri(uri);
     setAlarmSoundName(name);
-    await AsyncStorage.setItem(SOUND_URI_KEY, uri);
-    await AsyncStorage.setItem(SOUND_NAME_KEY, name);
+    try {
+      await AsyncStorage.setItem(SOUND_URI_KEY, uri);
+      await AsyncStorage.setItem(SOUND_NAME_KEY, name);
+    } catch (e) {
+      console.warn('Error saving sound selection', e);
+    }
   };
 
   const play = async () => {
-    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
-    const soundSource = alarmSoundUri ? { uri: alarmSoundUri } : DEFAULT_SOUND;
-    const { sound } = await Audio.Sound.createAsync(soundSource);
-    setSound(sound);
-    await sound.setIsLoopingAsync(true);
-    await sound.playAsync();
+    try {
+      await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+      const soundSource = alarmSoundUri ? { uri: alarmSoundUri } : DEFAULT_SOUND;
+      const { sound } = await Audio.Sound.createAsync(soundSource);
+      setSound(sound);
+      await sound.setIsLoopingAsync(true);
+      await sound.playAsync();
+    } catch (e) {
+      console.warn('Error playing sound', e);
+    }
   };
 
   const stop = async () => {
     if (sound) {
-      await sound.stopAsync();
-      await sound.unloadAsync();
+      try {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+      } catch (e) {
+        /* ignore */
+      }
       setSound(null);
     }
   };
 
   const onTrigger = () => { setRing(true); play(); };
-  const onSolve   = () => { stop(); setRing(false); };
+  const onSolve = () => { stop(); setRing(false); };
 
   return (
     <View style={styles.container}>

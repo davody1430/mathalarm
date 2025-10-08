@@ -11,8 +11,8 @@ export default function MathChallenge({ onCorrect }) {
       onCorrect();
     } else {
       alert('جواب اشتباه! دوباره امتحان کن.');
-      setVal(''); // Clear input on wrong answer
-      setProb(generateMathProblem()); // Generate a new problem
+      setVal('');
+      setProb(generateMathProblem());
     }
   };
 
@@ -21,8 +21,8 @@ export default function MathChallenge({ onCorrect }) {
   }, []);
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
       <Text style={styles.title}>برای خاموش کردن زنگ معادله رو حل کن:</Text>
@@ -44,31 +44,31 @@ export default function MathChallenge({ onCorrect }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 30, 
-    backgroundColor: '#1c1c1e' 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+    backgroundColor: '#1c1c1e'
   },
-  title: { 
-    fontSize: 22, 
-    marginBottom: 20, 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+    fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
   },
-  math: { 
-    fontSize: 48, 
-    marginVertical: 20, 
-    fontWeight: 'bold', 
-    color: '#f39c12' 
+  math: {
+    fontSize: 48,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    color: '#f39c12'
   },
-  input: { 
-    borderBottomWidth: 2, 
+  input: {
+    borderBottomWidth: 2,
     borderColor: '#3498db',
-    width: 120, 
-    textAlign: 'center', 
+    width: 120,
+    textAlign: 'center',
     fontSize: 36,
     marginBottom: 30,
     paddingVertical: 10,

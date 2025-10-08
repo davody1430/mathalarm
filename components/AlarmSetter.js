@@ -16,7 +16,7 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      // Not fatal — app can still function locally
       return;
     }
   }
@@ -51,9 +51,9 @@ export default function AlarmSetter({ onSoundPick, soundName }) {
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "⏰ زنگ بیدارباش!",
-        body: 'وقت بیدار شدنه! برای خاموش کردن زنگ، مسئله ریاضی رو حل کن.',
-        sound: true, // Use default notification sound
+        title: "\u23f0 \u0632\u0646\u06af \u0628\u06cc\u062f\u0627\u0631\u0628\u0627\u0634!",
+        body: '\u0648\u0642\u062a \u0628\u06cc\u062f\u0627\u0631 \u0634\u062f\u0646\u0647! \u0628\u0631\u0627\u06cc \u062e\u0627\u0645\u0648\u0634 \u06a9\u0631\u062f\u0646 \u0632\u0646\u06af\u060c \u0645\u0633\u0626\u0644\u0647 \u0631\u06cc\u0627\u0632\u06cc \u0631\u0648 \u062d\u0644 \u06a9\u0646.',
+        sound: true,
       },
       trigger,
     });
@@ -68,8 +68,9 @@ export default function AlarmSetter({ onSoundPick, soundName }) {
         type: 'audio/*',
         copyToCacheDirectory: false,
       });
-      if (result.canceled === false && result.assets && result.assets.length > 0) {
-        onSoundPick(result.assets[0].uri, result.assets[0].name);
+      if (result.type === 'success') {
+        // DocumentPicker v10+ returns { type, uri, name }
+        onSoundPick(result.uri, result.name || 'custom');
       }
     } catch (err) {
       console.error('Error picking sound:', err);
@@ -85,18 +86,18 @@ export default function AlarmSetter({ onSoundPick, soundName }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>ساعت زنگ‌دار ریاضی</Text>
+      <Text style={styles.header}>\u0633\u0627\u0639\u062a \u0632\u0646\u06AF\u200c\u062f\u0627\u0631 \u0631\u06cc\u0627\u0632\u06cc</Text>
       
-      {alarm && <Text style={styles.alarmText}>زنگ برای ساعت {alarm} تنظیم شد</Text>}
+      {alarm && <Text style={styles.alarmText}>\u0632\u0646\u06AF \u0628\u0631\u0627\u06CC \u0633\u0627\u0639\u062A {alarm} \u062A\u0646\u0632\u06CC\u0645 \u0634\u062F</Text>}
       
       <TouchableOpacity style={styles.button} onPress={() => setShow(true)}>
-        <Text style={styles.buttonText}>{alarm ? "تغییر زمان زنگ" : "تنظیم زنگ"}</Text>
+        <Text style={styles.buttonText}>{alarm ? "\u062a\u063a\u06cc\u06cc\u0631 \u0632\u0645\u0627\u0646 \u0632\u0646\u06AF" : "\u062a\u0646\u0632\u06CC\u0645 \u0632\u0646\u06AF"}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={pickSound}>
-        <Text style={styles.buttonText}>انتخاب صدای زنگ</Text>
+        <Text style={styles.buttonText}>\u0627\u0646\u062a\u062e\u0627\u0628 \u0635\u062f\u0627\u06CC \u0632\u0646\u06AF</Text>
       </TouchableOpacity>
-      {soundName && <Text style={styles.soundNameText}>صدای فعلی: {soundName}</Text>}
+      {soundName && <Text style={styles.soundNameText}>\u0635\u062f\u0627\u06CC \u0641\u0639\u0644\u06CC: {soundName}</Text>}
 
       {show && (
         <DateTimePicker
